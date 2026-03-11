@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:workmate_mobile/features/clock_in/cubit/location_cubit.dart';
 import 'package:workmate_mobile/features/clock_in/presentation/clock_in_area_page.dart';
 import 'package:workmate_mobile/features/clock_in/presentation/clock_in_view.dart';
-import 'package:workmate_mobile/features/clock_in/presentation/selfie_clock_in_page.dart';
+import 'package:workmate_mobile/features/clock_in/presentation/flow/preview_clock_in_page.dart';
+import 'package:workmate_mobile/features/clock_in/presentation/flow/selfie_clock_in_page.dart';
 import 'package:workmate_mobile/features/home/presentation/main_page.dart';
 import 'package:workmate_mobile/features/navbar/cubit/navbar_cubit.dart';
 import 'package:workmate_mobile/features/notifications/presentations/notification_page.dart';
@@ -38,6 +41,13 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: "selfie-page",
           builder: (context, state) => const SelfieClockInPage(),
+        ),
+        GoRoute(
+          path: "preview-page",
+          builder: (context, state) {
+            final imageBytes = state.extra as Uint8List;
+            return PreviewClockInPage(imageBytes: imageBytes);
+          },
         ),
       ],
     ),
