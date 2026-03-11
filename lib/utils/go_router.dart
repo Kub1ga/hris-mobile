@@ -12,6 +12,8 @@ import 'package:workmate_mobile/features/navbar/cubit/navbar_cubit.dart';
 import 'package:workmate_mobile/features/notifications/presentations/notification_page.dart';
 import 'package:workmate_mobile/main.dart';
 
+import '../features/clock_in/face_clock_in_bloc/face_clockin_bloc.dart';
+
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   routes: [
@@ -40,7 +42,10 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: "selfie-page",
-          builder: (context, state) => const SelfieClockInPage(),
+          builder: (context, state) => BlocProvider(
+            create: (_) => FaceClockinBloc()..add(InitializeCamera()),
+            child: const SelfieClockInPage(),
+          ),
         ),
         GoRoute(
           path: "preview-page",

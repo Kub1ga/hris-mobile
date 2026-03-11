@@ -16,6 +16,7 @@ class PreviewClockInPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF1F3F8),
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text("Selfie To Clock In"),
         centerTitle: true,
         leading: InkWell(
@@ -46,7 +47,7 @@ class PreviewClockInPage extends StatelessWidget {
               width: 334,
               height: 440,
               decoration: BoxDecoration(
-                color: Colors.amber,
+                // color: Colors.amber,
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
                   image: MemoryImage(imageBytes),

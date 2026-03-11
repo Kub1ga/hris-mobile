@@ -8,7 +8,6 @@ import 'package:workmate_mobile/core/components/primary_button.dart';
 import 'package:workmate_mobile/features/clock_in/cubit/location_cubit.dart';
 import 'package:workmate_mobile/features/login/bloc/login_bloc.dart';
 import 'package:workmate_mobile/features/login/cubit/login_state_cubit.dart';
-import 'package:workmate_mobile/features/login/models/login_state.dart';
 import 'package:workmate_mobile/features/navbar/cubit/navbar_cubit.dart';
 import 'package:workmate_mobile/features/onboarding/cubit/carousel_cubit.dart';
 import 'package:workmate_mobile/features/onboarding/models/onboarding_item.dart';

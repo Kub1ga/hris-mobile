@@ -168,7 +168,6 @@ class _HomeViewState extends State<HomeView> {
                                 height: 24,
                                 width: 24,
                                 decoration: BoxDecoration(
-                                  color: Colors.amber,
                                   border: Border.all(color: Colors.white),
                                   shape: BoxShape.circle,
                                 ),
