@@ -26,6 +26,7 @@ dependencies:
   image: ^4.8.0
   meta: ^1.17.0
   modal_bottom_sheet: ^3.0.0
+  shared_preferences: ^2.5.4
   tflite_flutter: ^0.12.1
 
 dev_dependencies:

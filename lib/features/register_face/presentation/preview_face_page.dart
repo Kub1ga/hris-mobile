@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:workmate_mobile/core/components/main_button.dart';
 import 'package:workmate_mobile/features/repository/attendance_repository.dart';
-import 'package:workmate_mobile/features/repository/auth_repository.dart';
+import 'package:workmate_mobile/features/auth/repository/auth_repository.dart';
 import 'package:workmate_mobile/utils/dio_client.dart';
 
 import '../../clock_in/attendance/bloc/attendance_bloc.dart';
@@ -67,7 +67,9 @@ class _PreviewFacePageState extends State<PreviewFacePage> {
               padding: const EdgeInsets.symmetric(vertical: 14),
               onTap: () async {
                 await uploadSelfie();
-                context.read<AttendanceBloc>().add(CheckFaceRecog());
+                if (context.mounted) {
+                  context.read<AttendanceBloc>().add(CheckFaceRecog());
+                }
               },
               text: "DONE",
             ),

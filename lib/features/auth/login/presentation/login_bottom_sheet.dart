@@ -8,10 +8,10 @@ import 'package:workmate_mobile/core/components/main_form_field.dart';
 import 'package:workmate_mobile/core/components/primary_button.dart';
 import 'package:workmate_mobile/core/theme/colors.dart';
 import 'package:workmate_mobile/core/theme/typography.dart';
-import 'package:workmate_mobile/features/login/cubit/login_state_cubit.dart';
-import 'package:workmate_mobile/features/login/models/login_state.dart';
+import 'package:workmate_mobile/features/auth/login/cubit/login_state_cubit.dart';
+import 'package:workmate_mobile/features/auth/login/models/login_state.dart';
 
-import '../../../core/components/custom_border_checkbox.dart';
+import '../../../../core/components/custom_border_checkbox.dart';
 import '../bloc/login_bloc.dart';
 
 class LoginBottomSheet extends StatefulWidget {
@@ -59,6 +59,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
           email: _emailController.text,
           password: _passwordController.text,
           loginMethod: method,
+          isRememberMe: isRememberMe,
         ),
       );
     } else if (method == LoginMethod.employeeId) {
@@ -68,6 +69,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
           employeeId: _employeeIdController.text,
           password: _passwordController.text,
           loginMethod: method,
+          isRememberMe: isRememberMe,
         ),
       );
     }
@@ -115,7 +117,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                             isEmailError = true;
                             emailErrorText = state.message;
                           });
-                        } else if (state is LoginSuccess) {
+                        } else if (state is Authenticated) {
                           context.pushReplacement('/home');
                         }
                       },
@@ -162,7 +164,12 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
             Row(
               spacing: 8,
               children: [
-                CustomBorderCheckbox(),
+                CustomBorderCheckbox(
+                  value: isRememberMe,
+                  onChanged: (value) {
+                    setRememberMe();
+                  },
+                ),
                 Text("Remember Me", style: BodyText.bodySmall),
                 const Spacer(),
                 Text(
@@ -245,7 +252,12 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
             Row(
               spacing: 8,
               children: [
-                CustomBorderCheckbox(),
+                CustomBorderCheckbox(
+                  value: isRememberMe,
+                  onChanged: (value) {
+                    setRememberMe();
+                  },
+                ),
                 Text("Remember Me", style: BodyText.bodySmall),
                 const Spacer(),
                 Text(
@@ -331,7 +343,12 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
             Row(
               spacing: 8,
               children: [
-                CustomBorderCheckbox(),
+                CustomBorderCheckbox(
+                  value: isRememberMe,
+                  onChanged: (value) {
+                    setRememberMe();
+                  },
+                ),
                 Text("Remember Me", style: BodyText.bodySmall),
                 const Spacer(),
                 Text(

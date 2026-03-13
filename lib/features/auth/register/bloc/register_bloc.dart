@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:workmate_mobile/features/repository/auth_repository.dart';
+import 'package:workmate_mobile/features/auth/repository/auth_repository.dart';
 
 part 'register_event.dart';
 part 'register_state.dart';

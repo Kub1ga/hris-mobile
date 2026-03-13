@@ -15,4 +15,6 @@ final class LoginError extends LoginState {
   List<Object> get props => [message];
 }
 
-final class LoginSuccess extends LoginState {}
+final class Authenticated extends LoginState {}
+
+final class UnAuthenticated extends LoginState {}

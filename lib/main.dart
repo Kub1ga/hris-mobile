@@ -4,25 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmate_mobile/core/components/main_button.dart';
 import 'package:workmate_mobile/core/components/primary_button.dart';
 import 'package:workmate_mobile/features/clock_in/attendance/bloc/attendance_bloc.dart';
 import 'package:workmate_mobile/features/clock_in/attendance/cubit/attendance_status_cubit.dart';
 import 'package:workmate_mobile/features/clock_in/attendance/cubit/face_recog_status_cubit.dart';
 import 'package:workmate_mobile/features/clock_in/cubit/location_cubit.dart';
-import 'package:workmate_mobile/features/login/bloc/login_bloc.dart';
-import 'package:workmate_mobile/features/login/cubit/login_state_cubit.dart';
+import 'package:workmate_mobile/features/auth/login/bloc/login_bloc.dart';
+import 'package:workmate_mobile/features/auth/login/cubit/login_state_cubit.dart';
 import 'package:workmate_mobile/features/navbar/cubit/navbar_cubit.dart';
 import 'package:workmate_mobile/features/onboarding/cubit/carousel_cubit.dart';
 import 'package:workmate_mobile/features/onboarding/models/onboarding_item.dart';
-import 'package:workmate_mobile/features/register/bloc/register_bloc.dart';
+import 'package:workmate_mobile/features/auth/register/bloc/register_bloc.dart';
 import 'package:workmate_mobile/features/register_face/bloc/register_face_bloc.dart';
 import 'package:workmate_mobile/features/repository/attendance_repository.dart';
 
 import 'core/theme/colors.dart';
 import 'core/theme/typography.dart';
-import 'features/login/presentation/login_bottom_sheet.dart';
-import 'features/repository/auth_repository.dart';
+import 'features/auth/login/presentation/login_bottom_sheet.dart';
+import 'features/auth/repository/auth_repository.dart';
 import 'utils/go_router.dart';
 
 late List<CameraDescription> _cameras;
@@ -30,6 +31,7 @@ late List<CameraDescription> _cameras;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+  final prefs = await SharedPreferences.getInstance();
   Bloc.observer = const AppBlocObserver();
   _cameras = await availableCameras();
 
@@ -45,8 +47,10 @@ Future<void> main() async {
           BlocProvider(create: (context) => FaceRecogStatusCubit()),
 
           BlocProvider(
-            create: (context) =>
-                LoginBloc(authRepository: context.read<AuthRepository>()),
+            create: (context) => LoginBloc(
+              authRepository: context.read<AuthRepository>(),
+              prefs: prefs,
+            ),
           ),
           BlocProvider(create: (context) => NavbarCubit()),
           BlocProvider(create: (context) => LocationCubit()),

@@ -8,7 +8,7 @@ import 'package:workmate_mobile/core/components/main_form_field.dart';
 import 'package:workmate_mobile/core/theme/colors.dart';
 import 'package:workmate_mobile/core/theme/typography.dart';
 
-import '../../../core/components/custom_border_checkbox.dart';
+import '../../../../core/components/custom_border_checkbox.dart';
 import '../../login/bloc/login_bloc.dart';
 import '../bloc/register_bloc.dart';
 
@@ -120,7 +120,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Row(
                     spacing: 8,
                     crossAxisAlignment: .center,
-                    children: [CustomBorderCheckbox(), _buildRichText()],
+                    children: [
+                      CustomBorderCheckbox(value: false, onChanged: (value) {}),
+                      _buildRichText(),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 36),

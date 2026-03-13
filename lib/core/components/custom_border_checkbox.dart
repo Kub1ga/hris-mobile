@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 
 class CustomBorderCheckbox extends StatefulWidget {
-  const CustomBorderCheckbox({super.key});
+  final bool value;
+  final Function(bool?)? onChanged;
+
+  const CustomBorderCheckbox({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
 
   @override
   State<CustomBorderCheckbox> createState() => _CustomBorderCheckboxState();
 }
 
 class _CustomBorderCheckboxState extends State<CustomBorderCheckbox> {
-  bool isChecked = false;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,12 +31,8 @@ class _CustomBorderCheckboxState extends State<CustomBorderCheckbox> {
         child: Transform.scale(
           scale: 0.7,
           child: Checkbox(
-            value: isChecked,
-            onChanged: (value) {
-              setState(() {
-                isChecked = value ?? false;
-              });
-            },
+            value: widget.value,
+            onChanged: widget.onChanged,
             checkColor: PurpleColors.purple600,
             activeColor: PurpleColors.purple100,
             // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

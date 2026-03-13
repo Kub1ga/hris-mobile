@@ -12,12 +12,14 @@ final class LoginSubmitted extends LoginEvent {
   final String? password;
   final String? employeeId;
   final LoginMethod loginMethod;
+  final bool isRememberMe;
 
   const LoginSubmitted({
     this.email,
     this.password,
     this.employeeId,
     required this.loginMethod,
+    this.isRememberMe = false,
   });
 
   @override
@@ -26,5 +28,10 @@ final class LoginSubmitted extends LoginEvent {
     password ?? '',
     employeeId ?? '',
     loginMethod,
+    isRememberMe,
   ];
+}
+
+final class CheckRememberMe extends LoginEvent {
+  const CheckRememberMe();
 }

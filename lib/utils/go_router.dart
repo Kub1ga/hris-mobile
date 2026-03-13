@@ -10,9 +10,10 @@ import 'package:workmate_mobile/features/clock_in/presentation/flow/selfie_clock
 import 'package:workmate_mobile/features/home/presentation/main_page.dart';
 import 'package:workmate_mobile/features/navbar/cubit/navbar_cubit.dart';
 import 'package:workmate_mobile/features/notifications/presentations/notification_page.dart';
-import 'package:workmate_mobile/features/register/presentation/register_page.dart';
+import 'package:workmate_mobile/features/auth/register/presentation/register_page.dart';
 import 'package:workmate_mobile/features/register_face/presentation/preview_face_page.dart';
 import 'package:workmate_mobile/features/register_face/presentation/register_face_page.dart';
+import 'package:workmate_mobile/features/splash/presentation/splash_screen.dart';
 import 'package:workmate_mobile/main.dart';
 
 import '../features/clock_in/face_clock_in_bloc/face_clockin_bloc.dart';
@@ -21,7 +22,11 @@ import '../features/register_face/bloc/register_face_bloc.dart';
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(path: '/', builder: (context, state) => const OnboardingPage()),
+    GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingPage(),
+    ),
     GoRoute(
       path: '/home',
       builder: (context, state) => BlocProvider(

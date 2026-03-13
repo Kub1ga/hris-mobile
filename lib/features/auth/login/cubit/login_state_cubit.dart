@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:workmate_mobile/features/login/models/login_state.dart';
+import 'package:workmate_mobile/features/auth/login/models/login_state.dart';
 
 part 'login_state_state.dart';
 
