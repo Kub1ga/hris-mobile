@@ -22,3 +22,7 @@ class BodyText {
 class TitleText {
   static const titleMedium = TextStyle(fontSize: 16, height: 24 / 16);
 }
+
+class DisplayText {
+  static const displayLarge = TextStyle(fontSize: 57, height: 64 / 57);
+}

@@ -5,11 +5,11 @@ import '../../utils/dio_client.dart';
 class AuthRepository {
   final Dio _dio = DioClient().dio;
 
-  Future<Map<String, dynamic>> login(String username, String password) async {
+  Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await _dio.post(
         '/auth/login',
-        data: {'username': username, 'password': password},
+        data: {'email': email, 'password': password},
       );
       return response.data;
     } on DioException catch (e) {
@@ -27,6 +27,32 @@ class AuthRepository {
       final response = await _dio.post(
         '/auth/login',
         data: {'employee_id': employeeId, 'password': password},
+      );
+      return response.data;
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data['error'] ?? "Terjadi kesalahan tidak diketahui";
+      throw errorMessage;
+    }
+  }
+
+  Future<Map<String, dynamic>> register({
+    required String email,
+    required String phoneNumber,
+    required String companyId,
+    required String password,
+    required bool isTncAccepted,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/register',
+        data: {
+          'company_code': companyId,
+          'email': email,
+          'is_tnc_accepted': isTncAccepted,
+          'password': password,
+          'phone_number': phoneNumber,
+        },
       );
       return response.data;
     } on DioException catch (e) {

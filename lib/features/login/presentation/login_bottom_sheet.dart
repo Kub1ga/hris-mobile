@@ -52,16 +52,16 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
   String emailErrorText = "";
 
   void handleSignIn(LoginMethod method) {
-    if (method.name == "email") {
-      log("Login with EMAIL: ${_employeeIdController.text}");
+    if (method == LoginMethod.email) {
+      log("Login with EMAIL: ${_emailController.text}");
       context.read<LoginBloc>().add(
         LoginSubmitted(
-          username: _emailController.text,
+          email: _emailController.text,
           password: _passwordController.text,
           loginMethod: method,
         ),
       );
-    } else if (method.name == "employeeId") {
+    } else if (method == LoginMethod.employeeId) {
       log("Login with EMPLOYEE ID: ${_employeeIdController.text}");
       context.read<LoginBloc>().add(
         LoginSubmitted(

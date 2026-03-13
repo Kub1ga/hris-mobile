@@ -1,0 +1,1 @@
+enum FaceRecogStatus { error, success }

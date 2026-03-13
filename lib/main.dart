@@ -3,14 +3,21 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:go_router/go_router.dart';
 import 'package:workmate_mobile/core/components/main_button.dart';
 import 'package:workmate_mobile/core/components/primary_button.dart';
+import 'package:workmate_mobile/features/clock_in/attendance/bloc/attendance_bloc.dart';
+import 'package:workmate_mobile/features/clock_in/attendance/cubit/attendance_status_cubit.dart';
+import 'package:workmate_mobile/features/clock_in/attendance/cubit/face_recog_status_cubit.dart';
 import 'package:workmate_mobile/features/clock_in/cubit/location_cubit.dart';
 import 'package:workmate_mobile/features/login/bloc/login_bloc.dart';
 import 'package:workmate_mobile/features/login/cubit/login_state_cubit.dart';
 import 'package:workmate_mobile/features/navbar/cubit/navbar_cubit.dart';
 import 'package:workmate_mobile/features/onboarding/cubit/carousel_cubit.dart';
 import 'package:workmate_mobile/features/onboarding/models/onboarding_item.dart';
+import 'package:workmate_mobile/features/register/bloc/register_bloc.dart';
+import 'package:workmate_mobile/features/register_face/bloc/register_face_bloc.dart';
+import 'package:workmate_mobile/features/repository/attendance_repository.dart';
 
 import 'core/theme/colors.dart';
 import 'core/theme/typography.dart';
@@ -28,15 +35,35 @@ Future<void> main() async {
 
   runApp(
     MultiRepositoryProvider(
-      providers: [RepositoryProvider(create: (context) => AuthRepository())],
+      providers: [
+        RepositoryProvider(create: (context) => AuthRepository()),
+        RepositoryProvider(create: (context) => AttendanceRepository()),
+      ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider(create: (context) => AttendanceStatusCubit()),
+          BlocProvider(create: (context) => FaceRecogStatusCubit()),
+
           BlocProvider(
             create: (context) =>
                 LoginBloc(authRepository: context.read<AuthRepository>()),
           ),
           BlocProvider(create: (context) => NavbarCubit()),
           BlocProvider(create: (context) => LocationCubit()),
+          BlocProvider(
+            create: (context) =>
+                RegisterBloc(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                AttendanceBloc(
+                    attendanceRepository: context.read<AttendanceRepository>(),
+                    status: context.read<AttendanceStatusCubit>(),
+                    faceStatus: context.read<FaceRecogStatusCubit>(),
+                  )
+                  ..add(FetchTodayAttendance())
+                  ..add(CheckFaceRecog()),
+          ),
         ],
         child: const MyApp(),
       ),
@@ -238,7 +265,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ? "Sign Up"
                             : "Skip",
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        onTap: () => _controller.animateToPage(3),
+                        onTap: () {
+                          if (state == 3) {
+                            context.push("/register");
+                          } else {
+                            _controller.animateToPage(3);
+                          }
+                        },
                       ),
                     ),
                   ],

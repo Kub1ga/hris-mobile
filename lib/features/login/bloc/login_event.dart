@@ -8,13 +8,13 @@ sealed class LoginEvent extends Equatable {
 }
 
 final class LoginSubmitted extends LoginEvent {
-  final String? username;
+  final String? email;
   final String? password;
   final String? employeeId;
   final LoginMethod loginMethod;
 
   const LoginSubmitted({
-    this.username,
+    this.email,
     this.password,
     this.employeeId,
     required this.loginMethod,
@@ -22,7 +22,7 @@ final class LoginSubmitted extends LoginEvent {
 
   @override
   List<Object> get props => [
-    username ?? '',
+    email ?? '',
     password ?? '',
     employeeId ?? '',
     loginMethod,

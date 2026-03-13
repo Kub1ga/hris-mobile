@@ -1,9 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:workmate_mobile/core/components/custom_bottom_sheet.dart';
 import 'package:workmate_mobile/core/components/main_button.dart';
 import 'package:workmate_mobile/core/theme/colors.dart';
 import 'package:workmate_mobile/core/theme/typography.dart';
+import 'package:workmate_mobile/features/clock_in/attendance/bloc/attendance_bloc.dart';
+import 'package:workmate_mobile/features/clock_in/attendance/cubit/attendance_status_cubit.dart';
+import 'package:workmate_mobile/features/clock_in/attendance/cubit/face_recog_status_cubit.dart';
+import 'package:workmate_mobile/features/clock_in/attendance/model/attendance_today_status.dart';
+import 'package:workmate_mobile/features/clock_in/attendance/model/face_recog_status.dart';
 
 class ClockInView extends StatefulWidget {
   const ClockInView({super.key});
@@ -188,16 +197,7 @@ class _ClockInViewState extends State<ClockInView> {
                             ],
                           ),
                           const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: MainButton(
-                              onTap: () {
-                                context.push("/clockin/area-page");
-                              },
-                              text: "Clock In",
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                            ),
-                          ),
+                          _buildClockInButton(),
                         ],
                       ),
                     ),
@@ -303,6 +303,62 @@ class _ClockInViewState extends State<ClockInView> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  SizedBox _buildClockInButton() {
+    var faceRecogStatus = context.read<FaceRecogStatusCubit>().state;
+    var attendanceStatus = context.read<AttendanceStatusCubit>().state;
+
+    void showRegisterBottomSheet() {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        builder: (context) {
+          return CustomBottomSheet();
+        },
+      );
+    }
+
+    return SizedBox(
+      width: double.infinity,
+      child: BlocBuilder<AttendanceBloc, AttendanceState>(
+        builder: (context, state) {
+          if (state is AttendanceSuccess) {
+            switch (attendanceStatus) {
+              case AttendanceTodayStatus.idle:
+                return MainButton(
+                  isDisabled: false,
+                  onTap: () {
+                    if (faceRecogStatus == FaceRecogStatus.error) {
+                      showRegisterBottomSheet();
+                    } else if (faceRecogStatus == FaceRecogStatus.success) {
+                      context.push("/clockin/area-page");
+                    }
+                  },
+                  text: "Clock In",
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                );
+              case AttendanceTodayStatus.clockedIn:
+                return Text("CLOCKED IN 1");
+              case AttendanceTodayStatus.clockedOut:
+                return Text("CLOCKED OUT 1");
+              case AttendanceTodayStatus.onBreak:
+                return Text("ON BREAK 1");
+            }
+          } else if (state is AttendanceError) {
+            return Text("TERJADI KESALAHAN");
+          } else {
+            return MainButton(
+              isDisabled: true,
+              onTap: () {},
+              text: "Clock In",
+              padding: const EdgeInsets.symmetric(vertical: 14),
+            );
+          }
+        },
       ),
     );
   }

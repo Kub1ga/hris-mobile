@@ -21,7 +21,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (event.loginMethod.name == "email") {
         try {
           final result = await authRepository.login(
-            event.username ?? "",
+            event.email ?? "",
             event.password ?? "",
           );
           final String? token = result['token'];
@@ -31,7 +31,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           } else {
             emit(LoginError("Token tidak ditemukan"));
           }
-          // emit(LoginSuccess());
         } catch (e) {
           emit(LoginError(e.toString()));
         }

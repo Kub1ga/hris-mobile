@@ -18,7 +18,6 @@ class SelfieClockInPage extends StatefulWidget {
 class _SelfieClockInPageState extends State<SelfieClockInPage>
     with WidgetsBindingObserver {
   late FaceMeshDetector _faceMeshDetector;
-  // FaceNetService faceNetService = FaceNetService();
 
   @override
   void initState() {

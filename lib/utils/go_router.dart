@@ -10,9 +10,13 @@ import 'package:workmate_mobile/features/clock_in/presentation/flow/selfie_clock
 import 'package:workmate_mobile/features/home/presentation/main_page.dart';
 import 'package:workmate_mobile/features/navbar/cubit/navbar_cubit.dart';
 import 'package:workmate_mobile/features/notifications/presentations/notification_page.dart';
+import 'package:workmate_mobile/features/register/presentation/register_page.dart';
+import 'package:workmate_mobile/features/register_face/presentation/preview_face_page.dart';
+import 'package:workmate_mobile/features/register_face/presentation/register_face_page.dart';
 import 'package:workmate_mobile/main.dart';
 
 import '../features/clock_in/face_clock_in_bloc/face_clockin_bloc.dart';
+import '../features/register_face/bloc/register_face_bloc.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -52,6 +56,31 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) {
             final imageBytes = state.extra as Uint8List;
             return PreviewClockInPage(imageBytes: imageBytes);
+          },
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) {
+        return RegisterPage();
+      },
+    ),
+    GoRoute(
+      path: '/register-face',
+      builder: (context, state) {
+        return BlocProvider(
+          create: (context) =>
+              RegisterFaceBloc()..add(InitializeRegisterCamera()),
+          child: RegisterFacePage(),
+        );
+      },
+      routes: [
+        GoRoute(
+          path: "preview-face",
+          builder: (context, state) {
+            final imageBytes = state.extra as Uint8List;
+            return PreviewFacePage(image: imageBytes);
           },
         ),
       ],
