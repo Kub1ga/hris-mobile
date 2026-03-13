@@ -3,11 +3,13 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_face_mesh_detection/google_mlkit_face_mesh_detection.dart';
 import 'package:image/image.dart' as img;
 import 'package:workmate_mobile/features/clock_in/model/face_clockin_status.dart';
+import 'package:workmate_mobile/features/clock_in/repository/face_repository.dart';
 import 'package:workmate_mobile/utils/facenet_service.dart';
 import 'package:workmate_mobile/utils/secure_storage.dart';
 
@@ -20,6 +22,8 @@ class FaceClockinBloc extends Bloc<FaceClockinEvent, FaceClockinState> {
   final FaceNetService faceNetService = FaceNetService();
   final SecureStorageHelper secureStorageHelper = SecureStorageHelper();
   final FaceClockinStatus status = FaceClockinStatus.idle;
+  final FaceRepository faceRepository = FaceRepository();
+  late List<double>? embeddingImage;
 
   FaceClockinBloc() : super(const FaceClockinState()) {
     faceMeshDetector = FaceMeshDetector(
@@ -48,6 +52,17 @@ class FaceClockinBloc extends Bloc<FaceClockinEvent, FaceClockinState> {
   ) async {
     emit(state.copyWith(isLoading: true));
 
+    await faceNetService.loadModel();
+    String? selfieUrl = await faceRepository.getSelfieUrl();
+
+    if (selfieUrl != null) {
+      final image = await downloadImage(selfieUrl);
+
+      if (image != null) {
+        embeddingImage = faceNetService.getEmbedding(image);
+      }
+    }
+
     final cameras = await availableCameras();
 
     final frontCamera = cameras.firstWhere(
@@ -66,8 +81,6 @@ class FaceClockinBloc extends Bloc<FaceClockinEvent, FaceClockinState> {
     await controller.startImageStream((image) {
       add(ProcessCameraImage(image));
     });
-
-    await faceNetService.loadModel();
 
     emit(state.copyWith(controller: controller, isLoading: false));
   }
@@ -179,14 +192,10 @@ class FaceClockinBloc extends Bloc<FaceClockinEvent, FaceClockinState> {
 
       final bytes = img.encodeJpg(faceImage);
 
-      await secureStorageHelper.saveEmbeddingImage(embedding);
-
-      final savedEmbedding = await secureStorageHelper.getEmbeddingImage();
-
-      if (savedEmbedding != null) {
+      if (embeddingImage != null) {
         final distance = faceNetService.calculateDistance(
           embedding,
-          savedEmbedding,
+          embeddingImage!,
         );
 
         log("SIMILARITY: $distance");
@@ -329,5 +338,15 @@ class FaceClockinBloc extends Bloc<FaceClockinEvent, FaceClockinState> {
         bytesPerRow: image.planes.first.bytesPerRow,
       ),
     );
+  }
+
+  Future<img.Image?> downloadImage(String url) async {
+    final response = await Dio().get(
+      url,
+      options: Options(responseType: ResponseType.bytes),
+    );
+
+    final bytes = response.data;
+    return img.decodeImage(bytes);
   }
 }
