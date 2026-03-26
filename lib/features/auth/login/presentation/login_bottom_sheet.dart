@@ -113,10 +113,18 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                     return BlocListener<LoginBloc, LoginState>(
                       listener: (context, state) {
                         if (state is LoginError) {
-                          setState(() {
-                            isEmailError = true;
-                            emailErrorText = state.message;
-                          });
+                          if (state.message.contains('Email') ||
+                              state.message.contains('Employee')) {
+                            setState(() {
+                              isEmailError = true;
+                              emailErrorText = state.message;
+                            });
+                          } else {
+                            setState(() {
+                              isPasswordError = true;
+                              passwordErrorText = state.message;
+                            });
+                          }
                         } else if (state is Authenticated) {
                           context.pushReplacement('/home');
                         }

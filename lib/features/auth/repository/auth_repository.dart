@@ -13,8 +13,16 @@ class AuthRepository {
       );
       return response.data;
     } on DioException catch (e) {
-      final errorMessage =
-          e.response?.data['error'] ?? "Terjadi kesalahan tidak diketahui";
+      String errorMessage = "Terjadi kesalahan";
+
+      if (e.response?.data != null) {
+        final data = e.response?.data;
+        if (data['errors'] != null && data['errors'] is Map) {
+          errorMessage = (data['errors'] as Map).values.first.toString();
+        } else {
+          errorMessage = data['message'] ?? errorMessage;
+        }
+      }
       throw errorMessage;
     }
   }
@@ -30,8 +38,16 @@ class AuthRepository {
       );
       return response.data;
     } on DioException catch (e) {
-      final errorMessage =
-          e.response?.data['error'] ?? "Terjadi kesalahan tidak diketahui";
+      String errorMessage = "Terjadi kesalahan";
+
+      if (e.response?.data != null) {
+        final data = e.response?.data;
+        if (data['errors'] != null && data['errors'] is Map) {
+          errorMessage = (data['errors'] as Map).values.first.toString();
+        } else {
+          errorMessage = data['message'] ?? errorMessage;
+        }
+      }
       throw errorMessage;
     }
   }
@@ -53,6 +69,20 @@ class AuthRepository {
           'password': password,
           'phone_number': phoneNumber,
         },
+      );
+      return response.data;
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data['error'] ?? "Terjadi kesalahan tidak diketahui";
+      throw errorMessage;
+    }
+  }
+
+  Future<Map<String, dynamic>> requestOtp({required String email}) async {
+    try {
+      final response = await _dio.post(
+        'auth/otp/request',
+        data: {'email': email},
       );
       return response.data;
     } on DioException catch (e) {

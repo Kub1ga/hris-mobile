@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/components/common_button.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/typography.dart';
+import '../../profile/bloc/profile_bloc.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -27,66 +30,82 @@ class _HomeViewState extends State<HomeView> {
           ),
           child: Padding(
             padding: const EdgeInsets.only(top: 20, left: 12, right: 12),
-            child: AppBar(
-              scrolledUnderElevation: 0,
-              backgroundColor: Colors.white,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Arya Batara Sena",
-                    style: TitleText.titleMedium.copyWith(
-                      fontWeight: FontWeight.bold,
+            child: BlocBuilder<ProfileBloc, ProfileState>(
+              builder: (context, state) {
+                if (state is ProfileLoading) {
+                  return Text("LOADING");
+                } else if (state is ProfileSuccess) {
+                  return AppBar(
+                    scrolledUnderElevation: 0,
+                    backgroundColor: Colors.white,
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          state.userProfileModels.email!,
+                          style: TitleText.titleMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          state.userProfileModels.role ?? "",
+                          style: LabelText.labelMedium.copyWith(
+                            color: const Color(0xff6E62FF),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(
-                    "Junior Full Stack Developer",
-                    style: LabelText.labelMedium.copyWith(
-                      color: const Color(0xff6E62FF),
-                      fontWeight: FontWeight.bold,
+                    automaticallyImplyLeading: false,
+                    actions: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: const Color(0xffF4F5FF),
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset("assets/icons/messages.svg"),
+                      ),
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: () {
+                          context.push("/notifications");
+                        },
+                        borderRadius: BorderRadius.circular(100),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffF4F5FF),
+                            shape: BoxShape.circle,
+                          ),
+                          child: SvgPicture.asset(
+                            "assets/icons/notification.svg",
+                          ),
+                        ),
+                      ),
+                    ],
+                    leading: Container(
+                      height: 44,
+                      width: 44,
+                      decoration: BoxDecoration(
+                        color: PurpleColors.purple400,
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: CachedNetworkImageProvider(
+                            state.userProfileModels.profilePicture ?? '',
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              automaticallyImplyLeading: false,
-              actions: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: const Color(0xffF4F5FF),
-                    shape: BoxShape.circle,
-                  ),
-                  child: SvgPicture.asset("assets/icons/messages.svg"),
-                ),
-                const SizedBox(width: 8),
-                InkWell(
-                  onTap: () {
-                    context.push("/notifications");
-                  },
-                  borderRadius: BorderRadius.circular(100),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF4F5FF),
-                      shape: BoxShape.circle,
-                    ),
-                    child: SvgPicture.asset("assets/icons/notification.svg"),
-                  ),
-                ),
-              ],
-              leading: Container(
-                height: 44,
-                width: 44,
-                decoration: BoxDecoration(
-                  color: PurpleColors.purple400,
-                  shape: BoxShape.circle,
-                ),
-              ),
+                  );
+                }
+                return Text("data");
+              },
             ),
           ),
         ),

@@ -308,7 +308,7 @@ class _ClockInViewState extends State<ClockInView> {
   }
 
   SizedBox _buildClockInButton() {
-    var faceRecogStatus = context.read<FaceRecogStatusCubit>().state;
+    var faceRecogStatus = context.watch<FaceRecogStatusCubit>().state;
     var attendanceStatus = context.read<AttendanceStatusCubit>().state;
 
     void showRegisterBottomSheet() {

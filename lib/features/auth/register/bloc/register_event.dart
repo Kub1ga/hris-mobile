@@ -7,6 +7,15 @@ sealed class RegisterEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class ReqOtpEvent extends RegisterEvent {
+  final String email;
+
+  const ReqOtpEvent({required this.email});
+
+  @override
+  List<Object> get props => [email];
+}
+
 class SubmitedEvent extends RegisterEvent {
   final String companyId;
   final String email;

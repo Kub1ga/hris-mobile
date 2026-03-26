@@ -17,8 +17,9 @@ import 'package:workmate_mobile/features/navbar/cubit/navbar_cubit.dart';
 import 'package:workmate_mobile/features/onboarding/cubit/carousel_cubit.dart';
 import 'package:workmate_mobile/features/onboarding/models/onboarding_item.dart';
 import 'package:workmate_mobile/features/auth/register/bloc/register_bloc.dart';
-import 'package:workmate_mobile/features/register_face/bloc/register_face_bloc.dart';
+import 'package:workmate_mobile/features/profile/bloc/profile_bloc.dart';
 import 'package:workmate_mobile/features/repository/attendance_repository.dart';
+import 'package:workmate_mobile/features/repository/profile_repository.dart';
 
 import 'core/theme/colors.dart';
 import 'core/theme/typography.dart';
@@ -40,6 +41,7 @@ Future<void> main() async {
       providers: [
         RepositoryProvider(create: (context) => AuthRepository()),
         RepositoryProvider(create: (context) => AttendanceRepository()),
+        RepositoryProvider(create: (context) => ProfileRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -54,6 +56,7 @@ Future<void> main() async {
           ),
           BlocProvider(create: (context) => NavbarCubit()),
           BlocProvider(create: (context) => LocationCubit()),
+          BlocProvider(create: (context) => ProfileBloc()..add(FetchProfile())),
           BlocProvider(
             create: (context) =>
                 RegisterBloc(authRepository: context.read<AuthRepository>()),

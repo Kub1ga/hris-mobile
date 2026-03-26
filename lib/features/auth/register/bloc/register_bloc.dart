@@ -23,5 +23,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         emit(RegisterError());
       }
     });
+
+    on<ReqOtpEvent>((event, emit) async {
+      emit(RegisterLoading());
+      try {
+        await authRepository.requestOtp(email: event.email);
+        emit(ReqOtpSuccess());
+      } catch (e) {
+        emit(ReqOtpError());
+      }
+    });
   }
 }
